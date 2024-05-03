@@ -1,4 +1,5 @@
 #!/bin/bash
+# forked from https://github.com/pazepaze/zoom-autoupdater
 if [[ $UID != 0 ]]; then
   echo "Please run this script with sudo."
   exit 1
@@ -33,8 +34,10 @@ install)
   if command -v apt-cache &>/dev/null; then
     cat <<'EOF' >/opt/zoom-updater/zoom-update.sh
 #!/bin/bash
+# forked from https://github.com/pazepaze/zoom-autoupdater
+
 export LANG=en
-ZOOM_VERSION_AVAILABLE=$(curl -s 'https://zoom.us/support/download' --header 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36' | grep "class=\"linux-ver-text\"" | sed -e 's/.*Version \(.*\)<.*/\1/')
+ZOOM_VERSION_AVAILABLE=$(curl -s 'https://zoom.us/support/download' | grep "version:" | cut -d ":" -f 2 | tr -d "' ,")
 echo zoom version available for download: $ZOOM_VERSION_AVAILABLE
 ZOOM_VERSION_AVAILABLE_MAJOR=$(echo $ZOOM_VERSION_AVAILABLE | sed -e 's/\([^\.]\+\.[^\.]\+\).*/\1/')
 echo "major" zoom version available for download: $ZOOM_VERSION_AVAILABLE_MAJOR
@@ -57,7 +60,7 @@ EOF
     cat <<'EOF' >/opt/zoom-updater/zoom-update.sh
 #!/bin/bash
 export LANG=en_US
-ZOOM_VERSION_AVAILABLE=$(curl -s 'https://zoom.us/support/download' --header 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36' | grep "class=\"linux-ver-text\"" | sed -e 's/.*Version \(.*\)<.*/\1/')
+ZOOM_VERSION_AVAILABLE=$(curl -s 'https://zoom.us/support/download' | grep "version:" | cut -d ":" -f 2 | tr -d "' ,")
 echo zoom version available for download: $ZOOM_VERSION_AVAILABLE
 ZOOM_VERSION_AVAILABLE_MAJOR=$(echo $ZOOM_VERSION_AVAILABLE | sed -e 's/\([^\.]\+\.[^\.]\+\).*/\1/')
 echo "major" zoom version available for download: $ZOOM_VERSION_AVAILABLE_MAJOR
